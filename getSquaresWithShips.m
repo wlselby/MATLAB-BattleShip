@@ -1,4 +1,4 @@
-function shipSquares = getSquaresWithShips(Locations)
+function shipSquares = getSquaresWithShips(locations)
 % INPUT:
 % Locations is a 5x4 numeric array where
 %   Col 1 ship type
@@ -16,31 +16,17 @@ function shipSquares = getSquaresWithShips(Locations)
 
 % define initial variables
 
-shipType=Locations(1);
-orientation=Locations(2);
-inputRow= Locations(3);
-inputCol= Locations(4);
-zerosArray=zeros(10,10);
-switch shipType
-    case 1
-        shipLength = ones(1,5);
-    case 2
-        shipLength = ones(1,4);
-    case 3
-        shipLength = ones(1,3);
-    case 4
-        shipLength = ones(1,3);
-    case 5
-        shipLength = ones(1,2);
-end
+
+shipLength = [5,4,3,3,2];
+shipSquares = zeros(10,10);
 
 for i=1:5        
   
-    if orientation == 1 %vertical
-        zerosArray(inputRow:inputRow+length(shipLength),inputCol)= zerosArray(inputRow:inputRow+length(shipLength),inputCol)+1;
+    if locations(i,2) == 1 %vertical
+        shipSquares(locations(i,3) : locations(i,3) + shipLength(locations(i,1)) -1, locations(i,4)) = shipSquares(locations(i,3) : locations(i,3) + shipLength(locations(i,1)) - 1, locations(i,4)) + 1;
     
-    elseif orientation == 2 %horizontal
-        zerosArray(inputCol:inputCol+length(shipLength), inputRow)= zerosArray(inputCol:inputCol+length(shipLength), inputRow)+1;
+    elseif locations(i,2) == 2 %horizontal
+        shipSquares(locations(i,3), locations(i,4): locations(i,4) + shipLength(locations(i,1)) - 1) = shipSquares(locations(i,3), locations(i,4): locations(i,4) + shipLength(locations(i,1)) - 1) + 1;
     
     end
 
