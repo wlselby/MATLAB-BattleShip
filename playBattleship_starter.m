@@ -19,7 +19,32 @@ displayBoards(Computer_Board, Player_Board);%player board is still empty
 compSquaresWithShips = getSquaresWithShips(Computer_Locations); 
 
 %% ask the Player to setup their Board
-% ADD YOUR CODE HERE
+
+shipData = {
+            1, "Aircraft Carrier", 5;
+            2, "Battleship",       4;
+            3, "Submarine",        3;
+            4, "Cruiser",          3;
+            5, "PT Boat",          2
+            };
+
+fprintf("Welcome to the Battleship Game!\nSetup your ships on the board\n")
+
+Player_Locations = [];
+for i = 1:5
+    fprintf("\n%s(length %d):\n", shipData{i,2}, shipData{i,3})
+    inputRowCol = input("Enter [row, column]:");
+    [inputRow, inputCol] = validateRowColumn(inputRowCol);
+    inputShipOrientation = input("Orientation ver = 1, hor = 2: ");
+    orientation = validateOrientation(inputShipOrientation);
+    Player_Locations = [Player_Locations; shipData(i,1),orientation, inputRow, inputCol];       
+end
+
+fprintf("*********************************")
+
+%place the ship on the board & display the board
+Player_Board = placeShipsOnBoard( Player_Board, Player_Locations, 1);
+displayBoards( Computer_Board, Player_Board )
 
 
 %% Play the game 
