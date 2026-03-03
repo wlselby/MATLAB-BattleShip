@@ -1,0 +1,37 @@
+function [row , col] = validateRowColumn(position)
+% Validates the row and column entered by the Player.
+% INPUT:
+%   position - 2-element numeric vector [row, col] entered by the Player
+%              when placing a ship on their board or when trying to hit
+%              ships on the Computer board.
+% RETURNS:
+%   row - integer in [1, 10]
+%   col - integer in [1, 10]
+% PRINTING:
+%   If the row or column is invalid, this function prints a message to
+%   the Command Window and repeatedly prompts the Player to enter a new
+%   [row, col] until both values are valid.
+% ASSUME:
+%   The Player always enters a 2-element numeric vector when prompted.
+
+
+% use a while loop to keep the user engaged until correct.
+while true
+
+    % if statement to check both values are correct
+    if rem(position(1),1) == 0 && position(1) <= 10 && position(1) >= 1 && rem(position(2),1) == 0 && position(2) <= 10 && position(2) >= 1
+        
+        % return the correct values after being checked and end the loop
+        row = position(1); col = position(2);
+            
+        break
+
+
+
+    else
+
+        % re-ask user for input
+        position = input('Incorrect. Enter [row, col]: ');
+    end
+end
+
