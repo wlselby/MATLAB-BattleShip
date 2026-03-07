@@ -57,61 +57,82 @@ fprintf("*********************************")
 
 
 %% Play the game 
-%Player_Locations = [1,1,1,1;2,1,1,2;3,1,1,3;4,1,1,4;5,1,1,5];
 
-%Player_Board = placeShipsOnBoard( Player_Board, Player_Locations, 1);
-%displayBoards( Computer_Board, Player_Board )
-% REMOVE THESE ^^^^
-
+% initialize variables
 turnTotal = 0;
 hitTotal = zeros(1,2);
 playerSquaresWithShips = getSquaresWithShips(Player_Locations);
-computerHits = [];
+computerGuesses = [];
+playerGuesses = zeros(1,2);
 
-
+% while loop to run the game until someone wins
 while sum(hitTotal < [17,17]) > 1
     % player turn
     if rem(turnTotal, 2) == 0
 
-        turnTotal = turnTotal + 1;
+        turnTotal = turnTotal + 1; %increase turn count for iteration
         fprintf('\nPLAYER''S TURN\n')
         
+        % gather input for attack
         [atkRow, atkCol] = validateRowColumn(input('Enter [row, column] to hit: '));
-        
-        %atk = randi([1,10],1,2);
-        %atkRow = atk(1); atkCol = atk(2);
+       
+        % check if the value is in the already used
+        if ismember([atkRow, atkCol], playerGuesses, 'rows')
 
-        if compSquaresWithShips(atkRow, atkCol)
+            disp('Error: already guessed that location.')
+
+
+        else
+            
+            % if its not already used then check if its a hit or not before
+            % acting everything else out
+            playerGuesses(end+1,:) = [atkRow, atkCol];
+            
+            if compSquaresWithShips(atkRow, atkCol)
 
             Computer_Board = markBoard('Computer', Computer_Board, atkRow, atkCol, true);
             displayBoards( Computer_Board, Player_Board )
 
             fprintf('Hit!\n')
-
+           
+            % give one point to the player
             hitTotal(1) = hitTotal(1) + 1;
 
 
-        else
+            else
+
             Computer_Board = markBoard('Computer', Computer_Board, atkRow, atkCol, false);
             displayBoards( Computer_Board, Player_Board )
 
             fprintf('No hit.\n')
+
+
+            end
+
         end
+        
+
+
+        
 
     % computer turn
     elseif rem(turnTotal, 2) == 1
-        fprintf('\nPUTER''S TURN\n')
+        fprintf('\nCOMPUTER''S TURN\n')
         turnTotal = turnTotal + 1;
 
+        % rather than give the computer the option to accidentally aim for
+        % the same suqare twice, that capability has been removed
+        % completely and the computer only aims for new spots
         while true
 
             atk = randi([1,10],1,2);
             
             exists = false;
 
-            for i = 1:length(computerHits)
+            % check if already guessed then append if it hasn't
+            for i = 1:length(computerGuesses)
                 
-                if isequal(computerHits{:,i}, atk)
+                if isequal(computerGuesses{:,i}, atk)
                 
                     exists = true;
                     break
@@ -123,7 +144,7 @@ while sum(hitTotal < [17,17]) > 1
     
             if ~exists
                 
-                computerHits{end+1} = atk;
+                computerGuesses{end+1} = atk;
 
                 break
 
@@ -134,7 +155,8 @@ while sum(hitTotal < [17,17]) > 1
         
         fprintf('Computer aims at [%d, %d].\n', atk)
         
-
+    % check for a hit or not before updating the board, same as the player
+    % side
         if playerSquaresWithShips(atk(1),atk(2))
             
             Player_Board = markBoard('Player', Player_Board, atk(1), atk(2), true);
@@ -160,7 +182,7 @@ while sum(hitTotal < [17,17]) > 1
     end
 end
 
-
+%check who won once the loop is broken
 if hitTotal(1) > hitTotal(2)
 
     fprintf('PLAYER WINS!')
