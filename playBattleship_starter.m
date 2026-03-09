@@ -50,11 +50,7 @@ for i = 1:size(shipData, 1)
     Player_Board = placeShipsOnBoard( Player_Board, Player_Locations, 1);
     displayBoards( Computer_Board, Player_Board )
 end
-
-fprintf("*********************************")
-
-
-
+    
 
 %% Play the game 
 
@@ -67,11 +63,16 @@ playerGuesses = zeros(1,2);
 
 % while loop to run the game until someone wins
 while sum(hitTotal < [17,17]) > 1
+
+    fprintf('*********************************\n')
+    
+
     % player turn
     if rem(turnTotal, 2) == 0
 
         turnTotal = turnTotal + 1; %increase turn count for iteration
         fprintf('\nPLAYER''S TURN\n')
+        fprintf('*********************************\n')
         
         % gather input for attack
         [atkRow, atkCol] = validateRowColumn(input('Enter [row, column] to hit: '));
@@ -95,9 +96,19 @@ while sum(hitTotal < [17,17]) > 1
 
             fprintf('Hit!\n')
            
+            
+
             % give one point to the player
             hitTotal(1) = hitTotal(1) + 1;
+            
+            [isSunk, shipType] = isShipSunk(Computer_Locations, playerGuesses);
 
+            if isSunk
+
+                fprintf('You sunk a(n) %s\n', shipData{shipType,2})
+
+
+            end
 
             else
 
@@ -112,12 +123,15 @@ while sum(hitTotal < [17,17]) > 1
         end
         
 
-
         
 
     % computer turn
     elseif rem(turnTotal, 2) == 1
+
         fprintf('\nCOMPUTER''S TURN\n')
+        fprintf('*********************************\n')
+        
+        
         turnTotal = turnTotal + 1;
 
         % rather than give the computer the option to accidentally aim for
@@ -180,6 +194,10 @@ while sum(hitTotal < [17,17]) > 1
         
 
     end
+    
+
+
+
 end
 
 %check who won once the loop is broken
