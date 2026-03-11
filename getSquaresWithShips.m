@@ -29,15 +29,21 @@ for i=1:r
     % rows or columns by adding using the initial row and column point,
     % iterating through the ship length (minus 1 to account for the initial
     % value) then adding 1 to the found zeros vector.
+    
     if Locations(i,2) == 1 %vertical
+
         shipSquares(Locations(i,3) : Locations(i,3) + shipLength(Locations(i,1)) -1, Locations(i,4)) = shipSquares(Locations(i,3) : Locations(i,3) + shipLength(Locations(i,1)) - 1, Locations(i,4)) + 1;
     
+
     elseif Locations(i,2) == 2 %horizontal
+
         shipSquares(Locations(i,3), Locations(i,4): Locations(i,4) + shipLength(Locations(i,1)) - 1) = shipSquares(Locations(i,3), Locations(i,4): Locations(i,4) + shipLength(Locations(i,1)) - 1) + 1;
     
     end
 
+
 end
+
 
 end
 
