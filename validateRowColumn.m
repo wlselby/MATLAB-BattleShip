@@ -32,6 +32,11 @@ while true
 
         % re-ask user for input
         position = input('Incorrect. Enter [row, col]: ');
+
     end
+
+
 end
 
+
+end
