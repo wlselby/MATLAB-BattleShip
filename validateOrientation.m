@@ -14,11 +14,18 @@ while true
         %orientaion is named the exact same as the input variable so no
         %reassigining is necessary adn we can just break the loop
         break
+
+        
     else
 
         %promt user for correct input if check fails
         orientation = input('Incorrect Orientation Enter orientation again: ');
 
+
     end
+
+
+end
+
 
 end
