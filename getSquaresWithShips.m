@@ -1,4 +1,4 @@
-function shipSquares = getSquaresWithShips(locations)
+function shipSquares = getSquaresWithShips(Locations)
 % INPUT:
 % Locations is a 5x4 numeric array where
 %   Col 1 ship type
@@ -20,13 +20,20 @@ function shipSquares = getSquaresWithShips(locations)
 shipLength = [5,4,3,3,2];
 shipSquares = zeros(10,10);
 
-for i=1:5        
-  
-    if locations(i,2) == 1 %vertical
-        shipSquares(locations(i,3) : locations(i,3) + shipLength(locations(i,1)) -1, locations(i,4)) = shipSquares(locations(i,3) : locations(i,3) + shipLength(locations(i,1)) - 1, locations(i,4)) + 1;
+[r,~] = size(Locations);
+
+% iterate through the rows of the locations matrix
+for i=1:r
     
-    elseif locations(i,2) == 2 %horizontal
-        shipSquares(locations(i,3), locations(i,4): locations(i,4) + shipLength(locations(i,1)) - 1) = shipSquares(locations(i,3), locations(i,4): locations(i,4) + shipLength(locations(i,1)) - 1) + 1;
+    % vectorized code that uses the orienation to update the appropriate
+    % rows or columns by adding using the initial row and column point,
+    % iterating through the ship length (minus 1 to account for the initial
+    % value) then adding 1 to the found zeros vector.
+    if Locations(i,2) == 1 %vertical
+        shipSquares(Locations(i,3) : Locations(i,3) + shipLength(Locations(i,1)) -1, Locations(i,4)) = shipSquares(Locations(i,3) : Locations(i,3) + shipLength(Locations(i,1)) - 1, Locations(i,4)) + 1;
+    
+    elseif Locations(i,2) == 2 %horizontal
+        shipSquares(Locations(i,3), Locations(i,4): Locations(i,4) + shipLength(Locations(i,1)) - 1) = shipSquares(Locations(i,3), Locations(i,4): Locations(i,4) + shipLength(Locations(i,1)) - 1) + 1;
     
     end
 

@@ -21,21 +21,26 @@ shipLength=shipArray(ship);
 
 shipSquares=getSquaresWithShips(locations);
 
+if  isempty(locations)
+
+    anotherShipThere = 0;
+
+else
 % just a quick spitball to get the code flowing
-if orientation==2
-    %if horizontal, the footprint of the new ship is the part of the array
-    %for the whole board in the same row, spanning from the start of the
-    %ship to where the ship ends based on ship length
-    shipFootprint= shipSquares(r,(c:c+shipLength-1));
-elseif orientation==1
-    %same idea but for vertical this time
-    shipFootprint= shipSquares((r:r+shipLength-1),c);
+    if orientation==2
+        %if horizontal, the footprint of the new ship is the part of the array
+        %for the whole board in the same row, spanning from the start of the
+        %ship to where the ship ends based on ship length
+        shipFootprint= shipSquares(r,(c:c+shipLength-1));
+    elseif orientation==1
+        %same idea but for vertical this time
+        shipFootprint= shipSquares((r:r+shipLength-1),c);
+
+    end
+    %if the sum is not zero, there is another ship somewhere in the footprint.
+    %if it is 0 there is not another ship there.
+    anotherShipThere=sum(shipFootprint)~=0;
 
 end
-%if the sum is not zero, there is another ship somewhere in the footprint.
-%if it is 0 there is not another ship there.
-anotherShipThere=sum(shipFootprint)~=shipLength;
-
-
 
 end

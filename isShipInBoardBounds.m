@@ -13,31 +13,20 @@ function shipInBoundsResult = isShipInBoardBounds(ship, vertOrHor, r, c)
 %define intial ship length in relation to the ship type
 shipArray=[5,4,3,3,2];
 shipLength=shipArray(ship);
+
+
 %by using a while loop, the proces runs more seemlessly, and requires
 %player to put new input in until they put in something that works
-while true
+
 %checks to see if vertical or horizontal, and then adds the ship length to
 %either columns or rows depending on if it is vertical or horizontal
-    if vertOrHor == 2
-        farLocation= shipLength-1 + c;
-    elseif vertOrHor == 1
-        farLocation= shipLength-1 + r;
-    end
-    %check to see if the far location is greater than 10. if it is the ship
-    %is off the board and must be placed in a different location.
-    shipInBoundsResult=farLocation <= 10;
-
-    %if the function is true, and the ship is within bounds, then this will
-    %break the while loop and allow the player to continue on with the game
-    if shipInBoundsResult ==1
-        break
-    end
-
-    %if not in bounds, the player is prompted for a new location that will
-    %then run through back through the loop to see if it is in the bounds.
-    newLocation=input('Ship is out of bounds. Enter a new location [row, column]:');
-    [r,c]=validateRowColumn(newLocation);
+if vertOrHor == 2
+    farLocation= shipLength-1 + c;
+elseif vertOrHor == 1
+    farLocation= shipLength-1 + r;
 end
-
+%check to see if the far location is greater than 10. if it is the ship
+%is off the board and must be placed in a different location.
+shipInBoundsResult=farLocation <= 10;
 
 end
