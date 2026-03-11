@@ -1,4 +1,4 @@
-function anotherShipThere=isAnotherShipThere(ship,orientation,r,c)
+function anotherShipThere=isAnotherShipThere(ship,orientation,r,c,locations)
 % isAnotherShipThere checks whether or not there is another ship in the way
 % of the ship that the player is trying to place. It does this by checking
 % where the ship will go against the binary layout of the ships that are
@@ -19,11 +19,11 @@ function anotherShipThere=isAnotherShipThere(ship,orientation,r,c)
 shipArray=[5,4,3,3,2];
 shipLength=shipArray(ship);
 
-shipSquares=getSquaresWithShips(r,c);
+shipSquares=getSquaresWithShips(locations);
 
 % just a quick spitball to get the code flowing
 if orientation==2
-    %if horizontal, the footprint of the new ship is the part o fthe array
+    %if horizontal, the footprint of the new ship is the part of the array
     %for the whole board in the same row, spanning from the start of the
     %ship to where the ship ends based on ship length
     shipFootprint= shipSquares(r,(c:c+shipLength-1));
@@ -32,10 +32,10 @@ elseif orientation==1
     shipFootprint= shipSquares((r:r+shipLength-1),c);
 
 end
+%if the sum is not zero, there is another ship somewhere in the footprint.
+%if it is 0 there is not another ship there.
+anotherShipThere=sum(shipFootprint)~=shipLength;
 
-for i = 1:length(shipFootprint)
-    shipThere=shipFootprint(i) ~= 1
 
 
-end
 end
