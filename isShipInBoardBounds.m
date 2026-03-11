@@ -21,7 +21,7 @@ while true
     if vertOrHor == 2
         farLocation= shipLength-1 + c;
     elseif vertOrHor == 1
-        farLocation= shiplength-1 + r;
+        farLocation= shipLength-1 + r;
     end
     %check to see if the far location is greater than 10. if it is the ship
     %is off the board and must be placed in a different location.
@@ -35,7 +35,7 @@ while true
 
     %if not in bounds, the player is prompted for a new location that will
     %then run through back through the loop to see if it is in the bounds.
-    newLocation=input('Ship is out of bounds. Enter a new location [row, column]:')
+    newLocation=input('Ship is out of bounds. Enter a new location [row, column]:');
     [r,c]=validateRowColumn(newLocation);
 end
 
