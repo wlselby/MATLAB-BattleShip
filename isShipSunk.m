@@ -29,6 +29,9 @@ isSunk = false;
 shipLength = [5,4,3,3,2];
 shipType = 0;
 
+% Get the most recent guess
+latestGuess = Guesses(end,:);
+
 for i = 1:5
     
     type = Locations(i,1);
@@ -42,7 +45,7 @@ for i = 1:5
         rows = (row:row+len-1)';
         cols = col * ones(len,1);
         
-    elseif orient == 2 % horizontal
+    else % horizontal
         
         rows = row * ones(len,1);
         cols = (col:col+len-1)';
@@ -51,13 +54,22 @@ for i = 1:5
     
     shipCoords = [rows cols];
     
-    if all(ismember(shipCoords, Guesses, 'rows'))
-        isSunk = true;
-        shipType = type;
-        return
+    % Only check ships that include the latest guess
+    if ismember(latestGuess, shipCoords, 'rows')
+        
+        % Check if all parts of the ship have been guessed
+        if all(ismember(shipCoords, Guesses, 'rows'))
+
+            isSunk = true;
+            shipType = type;
+
+
+        end
+        
+
     end
     
-end
 
 end
 
+end
