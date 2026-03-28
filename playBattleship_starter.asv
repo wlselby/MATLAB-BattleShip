@@ -29,26 +29,293 @@ shipData = {
             5, "PT Boat",          2
             };
 
-fprintf("Welcome to the Battleship Game!\nSetup your ships on the board\n")
+% empty player locations to add to 
+    Player_Locations = [];
 
-Player_Locations = [];
-for i = 1:5
-    fprintf("\n%s(length %d):\n", shipData{i,2}, shipData{i,3})
-    inputRowCol = input("Enter [row, column]:");
-    [inputRow, inputCol] = validateRowColumn(inputRowCol);
-    inputShipOrientation = input("Orientation ver = 1, hor = 2: ");
-    orientation = validateOrientation(inputShipOrientation);
-    Player_Locations = [Player_Locations; shipData(i,1),orientation, inputRow, inputCol];       
+% option to run a simulation instead of a game
+while true
+
+    gameType = input('What game type would you like to play? Normal(0) or Simulation(1): ');
+
+    if gameType == 1 || gameType == 0
+
+        break
+
+
+    end
+
+
 end
 
-fprintf("*********************************")
+if gameType == 0
 
-%place the ship on the board & display the board
-Player_Board = placeShipsOnBoard( Player_Board, Player_Locations, 1);
-displayBoards( Computer_Board, Player_Board )
+% initial game statement
+    fprintf("Welcome to the Battleship Game!\nSetup your ships on the board\n")
 
+    for i = 1:size(shipData, 1)
+        fprintf("\n%s(length %d):\n", shipData{i,2}, shipData{i,3})
+    
+
+    % while loop to trap the user for input until they generate a vailid
+    % placement
+        while true
+        % get input for coordinate, then check if it is valid
+            [inputRow, inputCol] = validateRowColumn(input("Enter [row, column]:"));
+    
+        % get input for orientation, then check if it is valid
+            orientation = validateOrientation(input("Orientation ver = 1, hor = 2: "));
+    
+        %logical value for if the ship is on the board
+            shipInBoundsResult = isShipInBoardBounds(i, orientation, inputRow, inputCol);
+        
+            if shipInBoundsResult == 1 
+            % if the ship is in the bounds, check if its in another ship
+                anotherShipThere = isAnotherShipThere(i, orientation, inputRow, inputCol, Player_Locations);
+            
+            % if the placement is clear of others and a valid location,
+            % break the loop to continue on
+                if anotherShipThere == 0
+                
+                    break
+
+                end
+
+            end
+        %if it fails both tests then print the error and try for a correct
+        %user input
+            fprintf('Incorrect Location, Please try again. ')
+
+        end
+
+    % update the player locations array with a new row, making a 5x4 matrix
+        Player_Locations = [Player_Locations; shipData{i,1}, orientation, inputRow, inputCol]; 
+
+
+
+    %place the ship on the board & display the board
+        Player_Board = placeShipsOnBoard( Player_Board, Player_Locations, 1);
+        displayBoards( Computer_Board, Player_Board )
+    end
+
+%random assortment
+elseif gameType == 1
+    for i = 1:5
+
+        % similar structure to the player but with random intiger functions
+        while true
+        
+        % random inputs for the loop data
+            coords = randi([1,10], 1, 2);
+            orientation = randi([1,2]);
+    
+        %logical value for if the ship is on the board
+            shipInBoundsResult = isShipInBoardBounds(i, orientation, coords(1), coords(2));
+        
+            if shipInBoundsResult == 1 
+            % if the ship is in the bounds, check if its in another ship
+                anotherShipThere = isAnotherShipThere(i, orientation, coords(1), coords(2), Player_Locations);
+            
+            % if the placement is clear of others and a valid location,
+            % break the loop to continue on
+                if anotherShipThere == 0
+                
+                    break
+
+                end
+
+
+            end
+
+
+        end
+
+    % update the player locations array with a new row, making a 5x4 matrix
+        Player_Locations = [Player_Locations; shipData{i,1}, orientation, coords(1), coords(2)]; 
+
+
+
+    %place the ship on the board & display the board
+        Player_Board = placeShipsOnBoard( Player_Board, Player_Locations, 1);
+        displayBoards( Computer_Board, Player_Board )
+
+    end
+
+
+end
+   
 
 %% Play the game 
+
+% initialize variables
+turnTotal = 0;
+hitTotal = zeros(1,2);
+playerSquaresWithShips = getSquaresWithShips(Player_Locations);
+computerGuesses = [];
+playerGuesses = zeros(1,2);
+
+% while loop to run the game until someone wins
+while sum(hitTotal < [17,17]) > 1
+
+    fprintf('*********************************\n')
+    
+
+    % player tur
+    if rem(turnTotal, 2) == 0
+
+        % normal game
+        if gametype == 0
+
+            turnTotal = turnTotal + 1; %increase turn count for iteration
+            fprintf('\nPLAYER''S TURN\n')
+            fprintf('*********************************\n')
+        
+        % gather input for attack
+            [atkRow, atkCol] = validateRowColumn(input('Enter [row, column] to hit: '));
+       
+        % check if the value is in the already used
+            if ismember([atkRow, atkCol], playerGuesses, 'rows')
+
+                disp('Error: already guessed that location.')
+
+
+            else
+            
+            % if its not already used then check if its a hit or not before
+            % acting everything else out
+                playerGuesses(end+1,:) = [atkRow, atkCol];
+            
+                if compSquaresWithShips(atkRow, atkCol)
+
+                Computer_Board = markBoard('Computer', Computer_Board, atkRow, atkCol, true);
+                displayBoards( Computer_Board, Player_Board )
+
+                fprintf('Hit!\n')
+           
+            
+
+            % give one point to the player
+                hitTotal(1) = hitTotal(1) + 1;
+            
+                [isSunk, shipType] = isShipSunk(Computer_Locations, playerGuesses);
+
+                if isSunk
+
+                    fprintf('You sunk a(n) %s\n', shipData{shipType,2})
+
+
+                end
+
+                else
+
+                Computer_Board = markBoard('Computer', Computer_Board, atkRow, atkCol, false);
+                displayBoards( Computer_Board, Player_Board )
+
+                fprintf('No hit.\n')
+
+
+                end
+
+
+            end
+
+        elseif gameType == 1
+            % random aiming
+
+            atk = randi([1,10], 1, 2);
+            
+
+    
+        
+
+        
+
+    % computer turn
+    elseif rem(turnTotal, 2) == 1
+
+        fprintf('\nCOMPUTER''S TURN\n')
+        fprintf('*********************************\n')
+        
+        
+        turnTotal = turnTotal + 1;
+
+        % rather than give the computer the option to accidentally aim for
+        % the same suqare twice, that capability has been removed
+        % completely and the computer only aims for new spots
+        while true
+
+            atk = randi([1,10],1,2);
+            
+            exists = false;
+
+            % check if already guessed then append if it hasn't
+            for i = 1:length(computerGuesses)
+                
+                if isequal(computerGuesses{:,i}, atk)
+                
+                    exists = true;
+                    break
+                
+                    
+                end
+
+            end
+    
+            if ~exists
+                
+                computerGuesses{end+1} = atk;
+
+                break
+
+
+            end
+
+        end
+        
+        fprintf('Computer aims at [%d, %d].\n', atk)
+        
+    % check for a hit or not before updating the board, same as the player
+    % side
+        if playerSquaresWithShips(atk(1),atk(2))
+            
+            Player_Board = markBoard('Player', Player_Board, atk(1), atk(2), true);
+            displayBoards( Computer_Board, Player_Board )
+
+            fprintf('Hit!\n')
+
+            hitTotal(2) = hitTotal(2) + 1;
+
+
+        else
+
+            Player_Board = markBoard('Player', Player_Board, atk(1), atk(2), false);
+            displayBoards( Computer_Board, Player_Board )
+
+            fprintf('No hit.\n')
+
+
+        end
+
+        
+
+    end
+    
+
+
+
+end
+
+%check who won once the loop is broken
+if hitTotal(1) > hitTotal(2)
+
+    fprintf('PLAYER WINS!')
+
+
+elseif hitTotal(1) < hitTotal(2)
+
+    fprintf('COMPUTER WINS!')
+
+
+end
 
 
 %% Reveal the ships on the Computer Board when the game ends.

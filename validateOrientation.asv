@@ -1,0 +1,12 @@
+function orientation = validateOrientation(orientation)
+%validates the orientation entered by the Player
+% Input: orientation is an number entered by the Player when they are
+%        placing their ship on  their board
+% Return: orientation - integer either 1 or 2
+% PRINTING: this function prints to the Command Window and interacts with
+%           the Player to enter orientation (if it was invalid)
+
+while true
+
+    if rem(orientation,1)
+end
